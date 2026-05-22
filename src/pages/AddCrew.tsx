@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { UserPlus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
+import { checkUsageLimit } from "../services/planLimits";
 import { createCrewMember } from "../services/crewService";
 import { getCurrentUserSafe } from "../services/authUser";
 
@@ -31,6 +31,12 @@ export default function AddCrew() {
 
     if (!user) {
       navigate("/login");
+      return;
+    }
+    const limitCheck = await checkUsageLimit(user.uid, "crew");
+
+    if (!limitCheck.allowed) {
+      setError(limitCheck.message);
       return;
     }
 

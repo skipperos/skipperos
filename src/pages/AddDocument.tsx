@@ -6,6 +6,7 @@ import { getBoatsForUser } from "../services/boatService";
 import type { Boat } from "../services/boatService";
 import { createDocument } from "../services/documentService";
 import { getCurrentUserSafe } from "../services/authUser";
+import { checkUsageLimit } from "../services/planLimits";
 
 export default function AddDocument() {
   const navigate = useNavigate();
@@ -30,6 +31,12 @@ export default function AddDocument() {
 
       if (!user) {
         navigate("/login");
+        return;
+      }
+      const limitCheck = await checkUsageLimit(user.uid, "documents");
+
+      if (!limitCheck.allowed) {
+        setError(limitCheck.message);
         return;
       }
 

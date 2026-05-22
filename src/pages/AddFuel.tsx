@@ -7,6 +7,7 @@ import type { Boat } from "../services/boatService";
 import { createFuelRecord } from "../services/fuelService";
 import { getCurrentUserSafe } from "../services/authUser";
 
+
 export default function AddFuel() {
   const navigate = useNavigate();
 
@@ -37,6 +38,7 @@ export default function AddFuel() {
         navigate("/login");
         return;
       }
+
 
       const data = await getBoatsForUser(user.uid);
       setBoats(data);

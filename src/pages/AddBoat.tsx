@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Anchor } from "lucide-react";
-
+import { checkUsageLimit } from "../services/planLimits";
 import { createBoat } from "../services/boatService";
 import { getCurrentUserSafe } from "../services/authUser";
 
@@ -26,6 +26,12 @@ export default function AddBoat() {
 
     if (!user) {
       navigate("/login");
+      return;
+    }
+    const limitCheck = await checkUsageLimit(user.uid, "boats");
+
+    if (!limitCheck.allowed) {
+      setError(limitCheck.message);
       return;
     }
 
@@ -170,6 +176,7 @@ export default function AddBoat() {
             >
               {loading ? "Saving boat..." : "Save boat"}
             </button>
+
           </form>
         </div>
       </section>
