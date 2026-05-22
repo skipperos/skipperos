@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Anchor } from "lucide-react";
-import { auth } from "../services/firebase";
+
 import { createBoat } from "../services/boatService";
+import { getCurrentUserSafe } from "../services/authUser";
 
 export default function AddBoat() {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ export default function AddBoat() {
     e.preventDefault();
     setError("");
 
-    const user = auth.currentUser;
+    const user = await getCurrentUserSafe();
 
     if (!user) {
       navigate("/login");

@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Plus, ShipWheel } from "lucide-react";
 import { Link } from "react-router-dom";
-import { auth } from "../services/firebase";
+
 import { getBoatsForUser } from "../services/boatService";
 import type { Boat } from "../services/boatService";
+import { getCurrentUserSafe } from "../services/authUser";
 
 export default function Boats() {
   const [boats, setBoats] = useState<Boat[]>([]);
@@ -11,7 +12,7 @@ export default function Boats() {
 
   useEffect(() => {
     async function loadBoats() {
-      const user = auth.currentUser;
+      const user = await getCurrentUserSafe();
 
       if (!user) {
         setLoading(false);

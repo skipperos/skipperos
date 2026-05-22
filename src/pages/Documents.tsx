@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { FileWarning, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
-import { auth } from "../services/firebase";
+
+import { getCurrentUserSafe } from "../services/authUser";
+
 import {
   getDaysUntilExpiry,
   getDocumentsForUser,
@@ -15,7 +17,7 @@ export default function Documents() {
 
   useEffect(() => {
     async function loadDocuments() {
-      const user = auth.currentUser;
+      const user = await getCurrentUserSafe();
 
       if (!user) {
         setLoading(false);

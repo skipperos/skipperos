@@ -5,6 +5,7 @@ import { auth } from "../services/firebase";
 import { getBoatsForUser } from "../services/boatService";
 import type { Boat } from "../services/boatService";
 import { createFuelRecord } from "../services/fuelService";
+import { getCurrentUserSafe } from "../services/authUser";
 
 export default function AddFuel() {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ export default function AddFuel() {
 
   useEffect(() => {
     async function loadBoats() {
-      const user = auth.currentUser;
+      const user = await getCurrentUserSafe();
 
       if (!user) {
         navigate("/login");

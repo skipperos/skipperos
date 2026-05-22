@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { ClipboardCheck, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
-import { auth } from "../services/firebase";
+
 import { getTripsForUser } from "../services/tripService";
 import type { Trip } from "../services/tripService";
+import { getCurrentUserSafe } from "../services/authUser";
 
 export default function Trips() {
   const [trips, setTrips] = useState<Trip[]>([]);
@@ -11,7 +12,7 @@ export default function Trips() {
 
   useEffect(() => {
     async function loadTrips() {
-      const user = auth.currentUser;
+      const user = await getCurrentUserSafe();
 
       if (!user) {
         setLoading(false);

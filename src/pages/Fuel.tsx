@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Fuel as FuelIcon, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
-import { auth } from "../services/firebase";
+
 import { getFuelRecordsForUser } from "../services/fuelService";
 import type { FuelRecord } from "../services/fuelService";
+import { getCurrentUserSafe } from "../services/authUser";
 
 export default function Fuel() {
   const [fuelRecords, setFuelRecords] = useState<FuelRecord[]>([]);
@@ -11,7 +12,7 @@ export default function Fuel() {
 
   useEffect(() => {
     async function loadFuelRecords() {
-      const user = auth.currentUser;
+      const user = await getCurrentUserSafe();
 
       if (!user) {
         setLoading(false);

@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { Plus, Users } from "lucide-react";
 import { Link } from "react-router-dom";
-import { auth } from "../services/firebase";
+
+import { getCurrentUserSafe } from "../services/authUser";
+
 import {
   getCrewForUser,
   getCrewLicenseStatus,
@@ -15,7 +17,7 @@ export default function Crew() {
 
   useEffect(() => {
     async function loadCrew() {
-      const user = auth.currentUser;
+      const user = await getCurrentUserSafe();
 
       if (!user) {
         setLoading(false);

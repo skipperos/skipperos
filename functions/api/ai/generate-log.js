@@ -1,4 +1,4 @@
-export async function onRequestPost(context: any) {
+export async function onRequestPost(context) {
   try {
     const { request, env } = context;
 
@@ -71,7 +71,7 @@ Create the log with these sections:
       }
     );
 
-    const data: any = await geminiResponse.json();
+    const data = await geminiResponse.json();
 
     if (!geminiResponse.ok) {
       return Response.json(
@@ -85,7 +85,7 @@ Create the log with these sections:
 
     const report =
       data?.candidates?.[0]?.content?.parts
-        ?.map((part: any) => part.text || "")
+        ?.map((part) => part.text || "")
         .join("\n")
         .trim() || "";
 
@@ -97,7 +97,7 @@ Create the log with these sections:
     }
 
     return Response.json({ report });
-  } catch (error: any) {
+  } catch (error) {
     return Response.json(
       { message: error?.message || "Server error while generating log." },
       { status: 500 }

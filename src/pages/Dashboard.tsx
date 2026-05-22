@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import { auth } from "../services/firebase";
+
 
 import { getBoatsForUser } from "../services/boatService";
 import type { Boat } from "../services/boatService";
@@ -40,6 +40,7 @@ import type { FuelRecord } from "../services/fuelService";
 
 import { getTrialDaysLeft, getUserPlan } from "../services/paymentService";
 import type { UserPlan } from "../services/paymentService";
+import { getCurrentUserSafe } from "../services/authUser";
 
 export default function Dashboard() {
   const [boats, setBoats] = useState<Boat[]>([]);
@@ -54,7 +55,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     async function loadDashboardData() {
-      const user = auth.currentUser;
+      const user = await getCurrentUserSafe();
 
       if (!user) {
         setLoading(false);

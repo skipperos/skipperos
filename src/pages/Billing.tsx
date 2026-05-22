@@ -14,6 +14,7 @@ import {
 } from "../services/paymentService";
 import type { PlanKey, UserPlan } from "../services/paymentService";
 import { getTrialDaysLeft } from "../services/paymentService";
+import { getCurrentUserSafe } from "../services/authUser";
 
 const plans: {
   key: PlanKey;
@@ -80,7 +81,7 @@ export default function Billing() {
 
   useEffect(() => {
     async function loadPlan() {
-      const user = auth.currentUser;
+      const user = await getCurrentUserSafe();
 
       if (!user) {
         setLoadingPlan(false);

@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { UserPlus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../services/firebase";
+
 import { createCrewMember } from "../services/crewService";
+import { getCurrentUserSafe } from "../services/authUser";
 
 export default function AddCrew() {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ export default function AddCrew() {
     e.preventDefault();
     setError("");
 
-    const user = auth.currentUser;
+    const user = await getCurrentUserSafe();
 
     if (!user) {
       navigate("/login");
