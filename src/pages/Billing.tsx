@@ -26,7 +26,7 @@ const plans: {
     {
       key: "starter",
       name: "Starter",
-      price: "R493",
+      price: "$29",
       description: "For single-boat operators getting organized.",
       features: [
         "1 boat workspace",
@@ -41,7 +41,7 @@ const plans: {
     {
       key: "fleet",
       name: "Fleet",
-      price: "R1300",
+      price: "$79",
       description: "For growing teams running multiple vessels.",
       highlighted: true,
       features: [
@@ -57,7 +57,7 @@ const plans: {
     {
       key: "pro",
       name: "Operator Pro",
-      price: "R2455",
+      price: "$149",
       description: "For serious operators with higher admin pressure.",
       features: [
         "Advanced fleet workspace",
