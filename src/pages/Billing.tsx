@@ -6,14 +6,13 @@ import {
   ShieldCheck,
   Star,
 } from "lucide-react";
-import { auth } from "../services/firebase";
 import {
   getPlanLabel,
   getPlanStatusLabel,
+  getTrialDaysLeft,
   getUserPlan,
 } from "../services/paymentService";
 import type { PlanKey, UserPlan } from "../services/paymentService";
-import { getTrialDaysLeft } from "../services/paymentService";
 import { getCurrentUserSafe } from "../services/authUser";
 
 const plans: {
@@ -27,7 +26,7 @@ const plans: {
     {
       key: "starter",
       name: "Starter",
-      price: "$29",
+      price: "R493",
       description: "For single-boat operators getting organized.",
       features: [
         "1 boat workspace",
@@ -42,7 +41,7 @@ const plans: {
     {
       key: "fleet",
       name: "Fleet",
-      price: "$79",
+      price: "R1300",
       description: "For growing teams running multiple vessels.",
       highlighted: true,
       features: [
@@ -58,7 +57,7 @@ const plans: {
     {
       key: "pro",
       name: "Operator Pro",
-      price: "$149",
+      price: "R2455",
       description: "For serious operators with higher admin pressure.",
       features: [
         "Advanced fleet workspace",
@@ -81,18 +80,18 @@ export default function Billing() {
 
   useEffect(() => {
     async function loadPlan() {
-      const user = await getCurrentUserSafe();
-
-      if (!user) {
-        setLoadingPlan(false);
-        return;
-      }
-
       try {
+        const user = await getCurrentUserSafe();
+
+        if (!user) {
+          setLoadingPlan(false);
+          return;
+        }
+
         const plan = await getUserPlan(user.uid);
         setUserPlan(plan);
-      } catch (error) {
-        console.error("Billing plan load error:", error);
+      } catch (err) {
+        console.error("Billing plan load error:", err);
       } finally {
         setLoadingPlan(false);
       }
@@ -104,17 +103,15 @@ export default function Billing() {
   async function handleStartSubscription(plan: PlanKey) {
     setError("");
     setSelectedPlan(plan);
-
-    const user = auth.currentUser;
-
-    if (!user || !user.email) {
-      setError("Please login before continuing to payment.");
-      return;
-    }
-
     setStartingPayment(true);
 
     try {
+      const user = await getCurrentUserSafe();
+
+      if (!user || !user.email) {
+        throw new Error("Please login before continuing to payment.");
+      }
+
       const response = await fetch("/api/paystack/initialize-subscription", {
         method: "POST",
         headers: {
@@ -135,6 +132,7 @@ export default function Billing() {
 
       window.location.href = data.authorization_url;
     } catch (err: any) {
+      console.error("Billing checkout error:", err);
       setError(err.message || "Could not start subscription.");
     } finally {
       setStartingPayment(false);
@@ -169,17 +167,28 @@ export default function Billing() {
           ) : (
             <>
               <p className="text-sm font-bold text-slate-500">Current plan</p>
+
               <p className="mt-1 text-xl font-black text-slate-900">
                 {activePlan}
               </p>
+
               <p
                 className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs font-black ${isActive
                   ? "bg-emerald-50 text-emerald-700"
-                  : "bg-slate-100 text-slate-700"
+                  : isTrialing
+                    ? "bg-ocean-50 text-ocean-700"
+                    : "bg-slate-100 text-slate-700"
                   }`}
               >
                 {planStatus}
               </p>
+
+              {isTrialing && (
+                <p className="mt-3 rounded-xl bg-ocean-50 px-4 py-3 text-sm font-bold text-ocean-700">
+                  {trialDaysLeft} day{trialDaysLeft === 1 ? "" : "s"} left in
+                  your free trial.
+                </p>
+              )}
             </>
           )}
         </div>
@@ -197,12 +206,11 @@ export default function Billing() {
         </div>
 
         <h2 className="mt-5 text-3xl font-black md:text-4xl">
-          billing plans.
+          Billing plans.
         </h2>
 
         <p className="mt-3 max-w-2xl text-slate-300">
-          subscription activation is
-          handled by Paystack.
+          Subscription activation is handled securely by Paystack.
         </p>
       </div>
 
@@ -210,13 +218,6 @@ export default function Billing() {
         {plans.map((plan) => {
           const isCurrentPlan =
             userPlan?.plan === plan.key && userPlan?.planStatus === "active";
-          {
-            isTrialing && (
-              <p className="mt-3 rounded-xl bg-ocean-50 px-4 py-3 text-sm font-bold text-ocean-700">
-                {trialDaysLeft} day{trialDaysLeft === 1 ? "" : "s"} left in your free trial.
-              </p>
-            )
-          }
 
           return (
             <div
@@ -233,7 +234,11 @@ export default function Billing() {
                     : "bg-ocean-50 text-ocean-700"
                     }`}
                 >
-                  {plan.highlighted ? <Star size={25} /> : <CreditCard size={25} />}
+                  {plan.highlighted ? (
+                    <Star size={25} />
+                  ) : (
+                    <CreditCard size={25} />
+                  )}
                 </div>
 
                 {isCurrentPlan && (
@@ -274,7 +279,7 @@ export default function Billing() {
                 onClick={() => handleStartSubscription(plan.key)}
                 disabled={startingPayment || isCurrentPlan}
                 className={`mt-8 w-full rounded-xl px-5 py-3 font-bold disabled:cursor-not-allowed disabled:opacity-60 ${plan.highlighted
-                  ? "bg-white text-ocean-900"
+                  ? "bg-white text-ocean-900 hover:bg-slate-100"
                   : "bg-ocean-700 text-white hover:bg-ocean-900"
                   }`}
               >
