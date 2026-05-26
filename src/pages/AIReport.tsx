@@ -14,6 +14,8 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../services/firebase";
 
+import { checkUsageLimit } from "../services/planLimits";
+
 type ReportType =
   | "General vessel log"
   | "Trip log"
@@ -107,6 +109,7 @@ export default function AIReport() {
     try {
       setSaving(true);
       setError("");
+      setSaved(false);
 
       const user = await getCurrentUserSafe();
 
@@ -114,13 +117,21 @@ export default function AIReport() {
         throw new Error("You must be logged in to save AI reports.");
       }
 
+      const limitCheck = await checkUsageLimit(user.uid, "aiReports");
+
+      if (!limitCheck.allowed) {
+        setError(limitCheck.message);
+        return;
+      }
+
       await addDoc(collection(db, "aiReports"), {
         ownerId: user.uid,
         reportType,
         notes,
         report,
-        createdAt: serverTimestamp(),
         source: "gemini",
+        status: "saved",
+        createdAt: serverTimestamp(),
       });
 
       setSaved(true);
