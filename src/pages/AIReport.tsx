@@ -117,13 +117,21 @@ export default function AIReport() {
         throw new Error("You must be logged in to save AI reports.");
       }
 
-      const limitCheck = await checkUsageLimit(user.uid, "aiReports");
+      const aiLimitCheck = await checkUsageLimit(user.uid, "aiReports");
 
-      if (!limitCheck.allowed) {
-        setError(limitCheck.message);
+      if (!aiLimitCheck.allowed) {
+        setError(aiLimitCheck.message);
         return;
       }
 
+      const tripLimitCheck = await checkUsageLimit(user.uid, "trips");
+
+      if (!tripLimitCheck.allowed) {
+        setError(tripLimitCheck.message);
+        return;
+      }
+
+      // Save to AI reports collection
       await addDoc(collection(db, "aiReports"), {
         ownerId: user.uid,
         reportType,
@@ -131,6 +139,25 @@ export default function AIReport() {
         report,
         source: "gemini",
         status: "saved",
+        createdAt: serverTimestamp(),
+      });
+
+      // Also save to Trips collection so it appears on Trips page
+      await addDoc(collection(db, "trips"), {
+        ownerId: user.uid,
+        boatId: "",
+        boatName: "AI Generated Log",
+        tripType: reportType,
+        departureTime: new Date().toISOString(),
+        returnTime: "",
+        crew: "",
+        fuelStart: "",
+        fuelEnd: "",
+        notes: report,
+        originalNotes: notes,
+        aiGenerated: true,
+        source: "ai-log-generator",
+        status: "Completed",
         createdAt: serverTimestamp(),
       });
 
