@@ -17,7 +17,8 @@ export type LimitResource =
   | "fuelRecords"
   | "maintenance"
   | "crew"
-  | "aiReports";
+  | "aiReports"
+  | "checklists";
 
 type PlanLimits = Record<LimitResource, number>;
 
@@ -30,6 +31,7 @@ export const PLAN_LIMITS: Record<PlanKey, PlanLimits> = {
     maintenance: 5,
     crew: 2,
     aiReports: 3,
+    checklists: 10,
   },
   starter: {
     boats: 2,
@@ -39,6 +41,7 @@ export const PLAN_LIMITS: Record<PlanKey, PlanLimits> = {
     maintenance: 50,
     crew: 5,
     aiReports: 20,
+    checklists: 100,
   },
   fleet: {
     boats: 10,
@@ -48,6 +51,7 @@ export const PLAN_LIMITS: Record<PlanKey, PlanLimits> = {
     maintenance: 500,
     crew: 30,
     aiReports: 100,
+    checklists: 1000,
   },
   pro: {
     boats: 999999,
@@ -57,6 +61,7 @@ export const PLAN_LIMITS: Record<PlanKey, PlanLimits> = {
     maintenance: 999999,
     crew: 999999,
     aiReports: 999999,
+    checklists: 999999,
   },
 };
 
@@ -72,6 +77,7 @@ export function getPlanDisplayName(plan: PlanKey) {
   if (plan === "starter") return "Starter";
   if (plan === "fleet") return "Fleet";
   if (plan === "pro") return "Operator Pro";
+
   return "Trial";
 }
 
