@@ -22,6 +22,8 @@ import EditBoat from "./pages/EditBoat";
 import Billing from "./pages/Billing";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import SubscriptionGuard from "./components/SubscriptionGuard";
+import Checklists from "./pages/Checklists";
+import AddChecklist from "./pages/AddChecklist";
 
 function ProtectedPage({
   children,
@@ -196,6 +198,23 @@ export default function App() {
           element={
             <ProtectedPage requireSubscription={false}>
               <Billing />
+            </ProtectedPage>
+          }
+        />
+        <Route
+          path="/checklists"
+          element={
+            <ProtectedPage>
+              <Checklists />
+            </ProtectedPage>
+          }
+        />
+
+        <Route
+          path="/checklists/add"
+          element={
+            <ProtectedPage>
+              <AddChecklist />
             </ProtectedPage>
           }
         />

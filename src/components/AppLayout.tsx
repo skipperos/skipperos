@@ -70,6 +70,11 @@ const navItems = [
     to: "/crew",
     icon: Users,
   },
+  {
+    label: "Checklists",
+    to: "/checklists",
+    icon: ClipboardCheck,
+  },
 ];
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
