@@ -65,6 +65,7 @@ export default function Landing() {
               SkipperOS helps fishing fleets, charter boats, dive operators, tour boats,
               harbour transport, and workboats manage trips, crew, maintenance,
               documents, fuel, incidents, and compliance records.
+              © 2026 SkipperOS. All rights reserved. For sale on BuySellStartups.com
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
