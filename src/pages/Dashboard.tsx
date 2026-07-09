@@ -210,7 +210,7 @@ export default function Dashboard() {
         <p className="text-sm font-bold text-ocean-100">Welcome to SkipperOS</p>
 
         <h2 className="mt-2 text-3xl font-black md:text-4xl">
-          Your small-boat operating system.
+          Your professional boat operating system.
         </h2>
 
         <p className="mt-3 max-w-2xl text-slate-300">
