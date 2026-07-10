@@ -43,6 +43,18 @@ const features = [
     text: "Turn rough captain notes into clean professional logs and reports.",
   },
 ];
+<a
+  href="https://buysellstartups.com/listings/skipperos-mrdi8daj"
+  target="_blank"
+  rel="noopener"
+>
+  <img
+    src="https://buysellstartups.com/api/badge/skipperos-mrdi8daj"
+    alt="For Sale on Buy Sell Startups"
+    width={280}
+    height={68}
+  />
+</a>
 
 export default function Landing() {
   return (
@@ -180,18 +192,6 @@ function PreviewCard({ title, value }: { title: string; value: string }) {
   );
 }
 
-<a
-  href="https://buysellstartups.com/listings/skipperos-mrdi8daj"
-  target="_blank"
-  rel="noopener"
->
-  <img
-    src="https://buysellstartups.com/api/badge/skipperos-mrdi8daj"
-    alt="For Sale on Buy Sell Startups"
-    width={280}
-    height={68}
-  />
-</a>
 
 function PriceCard({
   name,
@@ -227,5 +227,6 @@ function PriceCard({
         Choose plan
       </Link>
     </div>
+
   );
 }
